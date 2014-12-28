@@ -57,8 +57,8 @@ public class BillOrganizer implements Serializable {
 		Object object=input.readObject();
 		if (object instanceof SortedLinkedList) {
 			list = (SortedLinkedList<Bill>)object;
-			System.out.println("read from file");
-			System.out.println(list);
+			//System.out.println("read from file");
+			//System.out.println(list);
 		}
 		Node<Bill> node = list.getHead();
 		
@@ -162,7 +162,7 @@ public class BillOrganizer implements Serializable {
 				"organizer.dat"));
 		write.writeObject(list);
 		write.close();
-		System.out.println("written to file");
+		//System.out.println("written to file");
 	}
 
 	public String toString() {
@@ -191,13 +191,17 @@ public class BillOrganizer implements Serializable {
 			System.out.println("View bills by date: \n"+ organizer.viewByDate());
 			System.out.println("View bills by amount: \n"+ organizer.viewByAmount());
 			System.out.println("View bills by type: \n"+ organizer.viewByType());
+			System.out.println("Pay next bill by bill amount");
 			organizer.payNextBill(BillCriteria.BILLAMOUNT);
 			System.out.println("View bills by amount: \n"+ organizer.viewByAmount());
+			System.out.println("Pay bill 3");
 			organizer.payNextBill(bill3);
 			System.out.println("View bills by amount: \n"+ organizer.viewByAmount());
 			organizer.closeOrganizer();
+			System.out.println("Write out to file");
 			System.out.println("print list: "+ organizer);
 			JFileChooser file = new JFileChooser();
+			System.out.println("now read in");
 			JOptionPane.showMessageDialog(null, "choose data file");
 			file.showOpenDialog(null);
 			String filename = file.getSelectedFile().getPath();

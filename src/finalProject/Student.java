@@ -1,6 +1,10 @@
 package finalProject;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+
+
 
 public class Student implements Serializable{
 
@@ -16,7 +20,7 @@ public class Student implements Serializable{
 	private String major;
 	private Integer numberOfCredits;
 	private double gpa;
-
+	private PriorityQueue<CompletedCourse> completedCourses;
 	public Student(Integer StudentID, String FirstName, String LastName,
 			String address, String city, String state, String zipcode,
 			Character gender, String major, Integer numberOfCredits, double gpa)
@@ -33,6 +37,7 @@ public class Student implements Serializable{
 		this.zipcode = zipcode;
 		this.gender = gender;
 		this.major = major;
+		this.completedCourses=new PriorityQueue<CompletedCourse>();
 		if (numberOfCredits< 0) {
 			throw new InvalidDataException();
 		}
@@ -192,6 +197,13 @@ public class Student implements Serializable{
 			builder.append(gpa);
 		}
 		return builder.toString();
+	}
+
+	public void addCompletedCourse(CompletedCourse course) throws DuplicateDataException {
+		if(completedCourses.contains(course)){
+			throw new DuplicateDataException();
+		}
+		completedCourses.add(course);
 	}
 
 }
