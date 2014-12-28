@@ -1,72 +1,64 @@
 package finalProject;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class StudentList implements Serializable {
 
-	private Student[] students;
-	private int numStudents;
+	private ArrayList<Student> students;
 	private static final long serialVersionUID=1;
 	
 
-	public StudentList(int length) {
+	public StudentList() {
 		
-		students = new Student[length];
-		numStudents = 0;
+		students = new ArrayList<Student>();
 	}
 
-	public void addStudent(Student student) throws DuplicateDataException,
-			ArrayIndexOutOfBoundsException {
-		if(numStudents==students.length){
-			throw new ArrayIndexOutOfBoundsException();
-		}
-		else if (hasStudent(student)) {
+	public void addStudent(Student student) throws DuplicateDataException {
+		
+		if (hasStudent(student)) {
 			throw new DuplicateDataException();
 		}
 	
-			students[numStudents++] = student;
+			students.add(student); 
 	}
 
 	public void addStudent(Integer StudentID, String LastName,
 			String FirstName, Character gender, String major)
 			throws DuplicateDataException, MissingDataException,
-			InvalidDataException, ArrayIndexOutOfBoundsException {
+			InvalidDataException{
 		if (StudentID == null) {
 			throw new MissingDataException();
 		}
 		Student newStudent = new Student(StudentID, LastName, FirstName,
 				gender, major);
-		if (!hasStudent(newStudent) && numStudents < students.length) {
-			students[numStudents++] = newStudent;
+		if (!hasStudent(newStudent)) {
+			students.add(newStudent);
 		} else if (hasStudent(newStudent)) {
 			throw new DuplicateDataException();
-		} else {
-			throw new ArrayIndexOutOfBoundsException();
-		}
+		} 
 	}
 	public void addCompletedCourse(Integer StudentID, CompletedCourse course) throws NotFoundException, DuplicateDataException{
 		int index=findStudent(StudentID);
-		students[index].addCompletedCourse(course);
+		students.get(index).addCompletedCourse(course);
 	}
 	public Double getGPA(Integer studentID) throws NotFoundException{
 		int index=findStudent(studentID);
-		return students[index].getGpa();
+		return students.get(index).getGpa();
 	}
 	public int getTotalCredits(Integer studentID) throws NotFoundException{
 		int index=findStudent(studentID);
-		return students[index].getNumberOfCredits();
+		return students.get(index).getNumberOfCredits();
 	}
 	public void remove(Integer StudentID) throws NotFoundException {
 		int index = findStudent(StudentID);
-		int last = numStudents - 1;
-		students[index] = students[last];
-		numStudents--;
+		students.remove(index);
 
 	}
 
 	public int findStudent(Integer StudentID) throws NotFoundException {
-		for (int i = 0; i < numStudents; i++) {
-			if (students[i].getStudentID().equals(StudentID)) {
+		for (int i = 0; i < students.size(); i++) {
+			if (students.get(i).getStudentID().equals(StudentID)) {
 				return i;
 			}
 		}
@@ -76,42 +68,42 @@ public class StudentList implements Serializable {
 	public void modifyStudentLastName(Integer StudentID,
 			String newName) throws NotFoundException {
 		int index = findStudent(StudentID);
-		students[index].setLastName(newName);
+		students.get(index).setLastName(newName);
 	}
 
 	public void modifyStudentAddress(Integer StudentID, String address,
 			String city, String state, String zipcode) throws NotFoundException {
 		int index = findStudent(StudentID);
-		students[index].setAddress(address);
-		students[index].setCity(city);
-		students[index].setState(state);
-		students[index].setZipcode(zipcode);
+		students.get(index).setAddress(address);
+		students.get(index).setCity(city);
+		students.get(index).setState(state);
+		students.get(index).setZipcode(zipcode);
 	}
 
 	public void modifyStudentGPA(Integer StudentID, Double gpa)
 			throws NotFoundException, InvalidDataException {
 		int index = findStudent(StudentID);
-		students[index].setGpa(gpa);
+		students.get(index).setGpa(gpa);
 	}
 
 	public void modifyStudentMajor(Integer StudentID, String major)
 			throws NotFoundException {
 		int index = findStudent(StudentID);
-		students[index].setMajor(major);
+		students.get(index).setMajor(major);
 	}
 
 	public void modifyStudentCredits(Integer StudentID, Integer credits)
 			throws NotFoundException, InvalidDataException {
 		int index = findStudent(StudentID);
-		students[index].setNumberOfCredits(credits);
+		students.get(index).setNumberOfCredits(credits);
 	}
 
 	public String findStudentsByMajor(String major) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < numStudents; i++) {
-			if (students[i].getMajor().toUpperCase().equals(major.toUpperCase())) {
+		for (int i = 0; i <students.size(); i++) {
+			if (students.get(i).getMajor().toUpperCase().equals(major.toUpperCase())) {
 				builder.append("\n");
-				builder.append(students[i].toString());
+				builder.append(students.get(i).toString());
 			}
 		}
 		return builder.toString();
@@ -119,18 +111,18 @@ public class StudentList implements Serializable {
 
 	public String findStudentsByCredit(int number) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < numStudents; i++) {
-			if (students[i].getNumberOfCredits() >= number) {
+		for (int i = 0; i < students.size(); i++) {
+			if (students.get(i).getNumberOfCredits() >= number) {
 				builder.append("\n");
-				builder.append(students[i].toString());
+				builder.append(students.get(i).toString());
 			}
 		}
 		return builder.toString();
 	}
 
 	public boolean hasStudent(Student s) {
-		for (int i = 0; i < numStudents; i++) {
-			if (s.equals(students[i])) {
+		for (int i = 0; i < students.size(); i++) {
+			if (s.equals(students.get(i))) {
 				return true;
 			}
 		}
@@ -138,14 +130,14 @@ public class StudentList implements Serializable {
 	}
 
 	public Student getStudent(Integer id) throws NotFoundException {
-		return students[findStudent(id)];
+		return students.get(findStudent(id));
 	}
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < numStudents; i++) {
+		for (int i = 0; i < students.size(); i++) {
 			builder.append("\n");
-			builder.append(students[i].toString());
+			builder.append(students.get(i).toString());
 		}
 		return builder.toString();
 	}
