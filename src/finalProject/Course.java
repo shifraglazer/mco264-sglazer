@@ -2,13 +2,16 @@ package finalProject;
 
 import java.io.Serializable;
 
-public class Course implements Serializable {
+public class Course implements Serializable, Comparable<Course> {
 	private String courseID;
 	private String courseName;
 	private Integer numCredits;
 	private String deptID;
 	private static final long serialVersionUID=1;
 public Course(String courseID, String courseName, Integer numCredits, String deptID )throws InvalidDataException{
+	if(courseID==null){
+		throw new InvalidDataException();
+	}
 	this.courseID=courseID;
 	this.courseName=courseName;
 	if(numCredits<=0){
@@ -18,6 +21,7 @@ public Course(String courseID, String courseName, Integer numCredits, String dep
 	this.deptID=deptID;
 	
 }
+
 public void setCourseName(String courseName){
 	this.courseName=courseName;
 }
@@ -42,11 +46,14 @@ return this.deptID;
 public int getnumCredits(){
 return this.numCredits;	
 }
-public int compareTo(String courseID){
-	return this.courseID.compareTo(courseID);
+public int compareTo(Course course){
+	return this.courseID.compareTo(course.courseID);
 }
-public boolean equals(Object o){
-	return this.courseID.equals(o);
+public boolean equals(Object obj){
+	if(obj instanceof Course){
+		return this.courseID.equals(((Course)obj).getCourseID());	
+	}
+	return false;
 }
 public String toString(){
 	StringBuilder builder=new StringBuilder();
@@ -60,4 +67,5 @@ public String toString(){
 	builder.append(deptID);
 return builder.toString();
 }
+
 }

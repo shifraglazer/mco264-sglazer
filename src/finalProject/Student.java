@@ -1,6 +1,7 @@
 package finalProject;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 
 
@@ -88,10 +89,25 @@ public class Student implements Serializable{
 	}
 
 	public Integer getNumberOfCredits() {
+		Iterator<CompletedCourse> iter=completedCourses.iterator();
+		int credits=0;
+		while(iter.hasNext()){
+			credits+=iter.next().getnumCredits();
+		}
+		this.numberOfCredits=credits;
 		return numberOfCredits;
 	}
 
 	public double getGpa() {
+		Iterator<CompletedCourse> iter=completedCourses.iterator();
+		int grades=0;
+		int credits=0;
+		while(iter.hasNext()){
+			CompletedCourse course=iter.next();
+			grades+=course.getGrade().getValue();
+			credits+=course.getnumCredits();
+					}
+		this.gpa=grades/Double.valueOf(credits);
 		return gpa;
 	}
 
@@ -145,8 +161,11 @@ public class Student implements Serializable{
 		return this.STUDENTID.compareTo(student.STUDENTID);
 	}
 
-	public boolean equals(Student student) {
-		return student.STUDENTID==(this.STUDENTID);
+	public boolean equals(Object obj) {
+		if(obj instanceof Student){
+		return STUDENTID.equals(((Student) obj).getStudentID());
+		}
+		return false;
 	}
 
 	public String toString() {
@@ -203,6 +222,8 @@ public class Student implements Serializable{
 			throw new DuplicateDataException();
 		}
 		completedCourses.add(course);
+		getGpa();
+		getNumberOfCredits();
 	}
 
 }
