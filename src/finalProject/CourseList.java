@@ -1,18 +1,17 @@
 package finalProject;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class CourseList {
-ArrayList<Course> courses;
+LinkedList<Course> courses;
 
 public CourseList(){
-	courses=new ArrayList<Course>();
+	courses=new LinkedList<Course>();
 }
 public void addCourse(Course c) throws DuplicateDataException{
 	if(!courses.contains(c)){
 		courses.add(c);
-		Collections.sort(courses);
 	}
 	else{
 		throw new DuplicateDataException();
@@ -22,38 +21,52 @@ public void addCourse(String courseID, String courseName, Integer numCredits, St
 	Course course=new Course(courseID,courseName,numCredits,deptID);
 	if(!courses.contains(course)){
 		courses.add(course);
-		Collections.sort(courses);
 	}
 	else{
 		throw new DuplicateDataException();
 	}
 }
-public void modifyCourseName(String courseID,String courseName)throws InvalidDataException{
-	int index=find(courseID);
-	courses.get(index).setCourseName(courseName);
+public void modifyCourseName(String courseID,String courseName)throws NotFoundException{
+	Course course=find(courseID);
+	course.setCourseName(courseName);
 }
-public void modifyNumCredits(String courseID, int numCredits)throws InvalidDataException{
-	int index=find(courseID);
-	courses.get(index).setNumberOfCredits(numCredits);
+public void modifyNumCredits(String courseID, int numCredits)throws NotFoundException, InvalidDataException{
+	Course course=find(courseID);
+	course.setNumberOfCredits(numCredits);
 }
-public void setDeptID(String courseID,String deptID)throws InvalidDataException{
-int index=find(courseID);
-courses.get(index).setDepartmentID(deptID);
+public void setDeptID(String courseID,String deptID)throws NotFoundException{
+Course course=find(courseID);
+course.setDepartmentID(deptID);
 }
-public Course getCourse(String courseID)throws InvalidDataException{
-	int index=find(courseID);
-	return courses.get(index);
+public Course getCourse(String courseID)throws  NotFoundException{
+	return find(courseID);
 }
-public String getCourseName(String courseID) throws InvalidDataException{
-	int index=find(courseID);
-	return courses.get(index).getCourseName();
+public String getCourseName(String courseID) throws NotFoundException{
+	Course course=find(courseID);
+	return course.getCourseName();
 }
-public int getNumCredits(String courseID) throws InvalidDataException{
-	int index=find(courseID);
-	return courses.get(index).getnumCredits();
+public int getNumCredits(String courseID) throws NotFoundException{
+	Course course=find(courseID);
+	return course.getnumCredits();
 }
-public int find(String courseID) throws InvalidDataException{
-	Course course=new Course(courseID,null,3,null);
-	return Collections.binarySearch(courses, course);
+public Course find(String courseID)throws NotFoundException{
+	Iterator<Course> iter=courses.iterator();
+	while(iter.hasNext()){
+		Course next=iter.next();
+		if(next.getCourseID()==courseID){
+			return next;
+		}
+	}
+	throw new NotFoundException();
+}
+public boolean hasCourse(Course course){
+	Iterator<Course> iter=courses.iterator();
+	while(iter.hasNext()){
+		Course next=iter.next();
+		if(next.equals(course)){
+			return true;
+		}
+	}
+	return false;
 }
 }

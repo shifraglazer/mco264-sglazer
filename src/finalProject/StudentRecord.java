@@ -27,6 +27,9 @@ public class StudentRecord {
 	public int getStudentNumberOfCredits(Integer studentID) throws NotFoundException{
 		return students.getTotalCredits(studentID);
 	}
+	public String getStudentInformation(Integer studentID) throws NotFoundException{
+		return students.findStudent(studentID).toString();
+	}
 	public void addCourse(Course c) throws DuplicateDataException{
 		courses.addCourse(c);
 	}

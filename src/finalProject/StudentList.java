@@ -1,17 +1,18 @@
 package finalProject;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 public class StudentList implements Serializable {
 
-	private ArrayList<Student> students;
+	private LinkedList<Student> students;
 	private static final long serialVersionUID=1;
 	
 
 	public StudentList() {
 		
-		students = new ArrayList<Student>();
+		students = new LinkedList<Student>();
 	}
 
 	public void addStudent(Student student) throws DuplicateDataException {
@@ -39,71 +40,77 @@ public class StudentList implements Serializable {
 		} 
 	}
 	public void addCompletedCourse(Integer StudentID, CompletedCourse course) throws NotFoundException, DuplicateDataException{
-		int index=findStudent(StudentID);
-		students.get(index).addCompletedCourse(course);
+		Student student=findStudent(StudentID);
+		student.addCompletedCourse(course);
 	}
 	public Double getGPA(Integer studentID) throws NotFoundException{
-		int index=findStudent(studentID);
-		return students.get(index).getGpa();
+		Student student=findStudent(studentID);
+		return student.getGpa();
 	}
 	public int getTotalCredits(Integer studentID) throws NotFoundException{
-		int index=findStudent(studentID);
-		return students.get(index).getNumberOfCredits();
+		Student student=findStudent(studentID);
+		return student.getNumberOfCredits();
 	}
 	public void remove(Integer StudentID) throws NotFoundException {
-		int index = findStudent(StudentID);
-		students.remove(index);
 
+		Student student = findStudent(StudentID);
+		students.remove(student);
 	}
 
-	public int findStudent(Integer StudentID) throws NotFoundException {
-		for (int i = 0; i < students.size(); i++) {
-			if (students.get(i).getStudentID().equals(StudentID)) {
-				return i;
+	public Student findStudent(Integer StudentID) throws NotFoundException {
+		Iterator<Student> iter=students.iterator();
+		Student next;
+		while(iter.hasNext()){
+			next=iter.next();
+			if(next.getStudentID()==StudentID){
+				return next;
 			}
 		}
+		
 		throw new NotFoundException();
 	}
 
 	public void modifyStudentLastName(Integer StudentID,
 			String newName) throws NotFoundException {
-		int index = findStudent(StudentID);
-		students.get(index).setLastName(newName);
+		Student student = findStudent(StudentID);
+		student.setLastName(newName);
 	}
 
 	public void modifyStudentAddress(Integer StudentID, String address,
 			String city, String state, String zipcode) throws NotFoundException {
-		int index = findStudent(StudentID);
-		students.get(index).setAddress(address);
-		students.get(index).setCity(city);
-		students.get(index).setState(state);
-		students.get(index).setZipcode(zipcode);
+		Student student= findStudent(StudentID);
+		student.setAddress(address);
+		student.setCity(city);
+		student.setState(state);
+		student.setZipcode(zipcode);
 	}
 
 	public void modifyStudentGPA(Integer StudentID, Double gpa)
 			throws NotFoundException, InvalidDataException {
-		int index = findStudent(StudentID);
-		students.get(index).setGpa(gpa);
+		Student student = findStudent(StudentID);
+		student.setGpa(gpa);
 	}
 
 	public void modifyStudentMajor(Integer StudentID, String major)
 			throws NotFoundException {
-		int index = findStudent(StudentID);
-		students.get(index).setMajor(major);
+		Student student = findStudent(StudentID);
+		student.setMajor(major);
 	}
 
 	public void modifyStudentCredits(Integer StudentID, Integer credits)
 			throws NotFoundException, InvalidDataException {
-		int index = findStudent(StudentID);
-		students.get(index).setNumberOfCredits(credits);
+		Student student = findStudent(StudentID);
+		student.setNumberOfCredits(credits);
 	}
 
 	public String findStudentsByMajor(String major) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i <students.size(); i++) {
-			if (students.get(i).getMajor().toUpperCase().equals(major.toUpperCase())) {
+		Iterator<Student> iter=students.iterator();
+		while(iter.hasNext()){
+			Student student=iter.next();
+			if (student.getMajor().toUpperCase().equals(major.toUpperCase())) {
 				builder.append("\n");
-				builder.append(students.get(i).toString());
+				builder.append(student.toString());
 			}
 		}
 		return builder.toString();
@@ -111,27 +118,28 @@ public class StudentList implements Serializable {
 
 	public String findStudentsByCredit(int number) {
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < students.size(); i++) {
-			if (students.get(i).getNumberOfCredits() >= number) {
+		Iterator<Student> iter=students.iterator();
+		while(iter.hasNext()){
+			Student student=iter.next();
+			if(student.getNumberOfCredits()==number){
 				builder.append("\n");
-				builder.append(students.get(i).toString());
+				builder.append(student.toString());
 			}
 		}
 		return builder.toString();
 	}
 
 	public boolean hasStudent(Student s) {
-		for (int i = 0; i < students.size(); i++) {
-			if (s.equals(students.get(i))) {
+		Iterator<Student> iter=students.iterator();
+		while(iter.hasNext()){
+			Student student=iter.next();
+			if (student.equals(s)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public Student getStudent(Integer id) throws NotFoundException {
-		return students.get(findStudent(id));
-	}
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
