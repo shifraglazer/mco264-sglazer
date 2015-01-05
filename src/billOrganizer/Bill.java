@@ -22,7 +22,7 @@ public class Bill implements Serializable , Comparable<Bill>{ /**
 	private Date dateDue;
 	private Integer billID;
 	private static int billNum;
-	private final	SimpleDateFormat FORMAT= new SimpleDateFormat("MM/dd/yyyy"); ;
+	private final static SimpleDateFormat FORMAT= new SimpleDateFormat("MM/dd/yyyy"); 
 	public Bill(String info) throws FileNotFoundException, ParseException {
 		String[] array = info.split("\\s+");
 		this.billID = ++billNum;
@@ -81,14 +81,14 @@ public class Bill implements Serializable , Comparable<Bill>{ /**
 			Date dateDue;
 			BillType type;
 			Bill bill = null;
-			SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy");
+			//SimpleDateFormat formater = new SimpleDateFormat("MM/dd/yyyy");
 			Scanner inputFile = new Scanner(new File("people.txt"));
 			ArrayList<Bill> bills=new ArrayList<Bill>();
 			while (inputFile.hasNextLine()) {
 				vendor = inputFile.next();
 				amountDue = inputFile.nextDouble();
 
-				dateDue = formater.parse(inputFile.next());
+				dateDue = FORMAT.parse(inputFile.next());
 				type = BillType.valueOf(inputFile.next());
 				inputFile.nextLine();
 				bill = new Bill(vendor, amountDue, dateDue, type);
@@ -105,7 +105,7 @@ public class Bill implements Serializable , Comparable<Bill>{ /**
 			Collections.sort(bills,new BillDateComparator());
 			System.out.println("Sort based on Bill date: "+bills);
 			Bill bill2 = new Bill("Shifra", 34.30,
-					formater.parse("01/24/2015"), BillType.CLOTHING);
+					FORMAT.parse("01/24/2015"), BillType.CLOTHING);
 			System.out.println("Amount due: " + bill.getAmountDue());
 			//test compareTo
 			System.out.println(bill.compareTo(bill2));

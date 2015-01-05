@@ -2,7 +2,7 @@ package finalProject;
 
 import java.io.Serializable;
 
-public class Course implements Serializable, Comparable<Course> {
+public class Course implements Serializable,Comparable<Course>{
 	private String courseID;
 	private String courseName;
 	private Integer numCredits;
@@ -10,12 +10,12 @@ public class Course implements Serializable, Comparable<Course> {
 	private static final long serialVersionUID=1;
 public Course(String courseID, String courseName, Integer numCredits, String deptID )throws InvalidDataException{
 	if(courseID==null){
-		throw new InvalidDataException();
+		throw new InvalidDataException("ID can't be null");
 	}
 	this.courseID=courseID;
 	this.courseName=courseName;
 	if(numCredits<=0){
-		throw new InvalidDataException();
+		throw new InvalidDataException("Course must have positive credit value");
 	}
 	this.numCredits=numCredits;
 	this.deptID=deptID;
@@ -27,7 +27,7 @@ public void setCourseName(String courseName){
 }
 public void setNumberOfCredits(Integer numCredits)throws InvalidDataException{
 	if(numCredits<=0){
-		throw new InvalidDataException();
+		throw new InvalidDataException("Course must have positive credit value");
 	}
 	this.numCredits=numCredits;
 }
@@ -67,5 +67,6 @@ public String toString(){
 	builder.append(deptID);
 return builder.toString();
 }
+
 
 }

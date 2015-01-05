@@ -60,15 +60,15 @@ public class BillOrganizer implements Serializable {
 			//System.out.println("read from file");
 			//System.out.println(list);
 		}
-		Node<Bill> node = list.getHead();
-		
+
+		LinkedListIterator<Bill> iter=list.iterator();
 		Bill bill;
-		while (node != null) {
-			bill = node.getData();
+		while (iter.hasNext()) {
+			bill = iter.next();
 			dateQueue.enqueue(bill);
 			amountQueue.enqueue(bill);
 			billTypeQueue.enqueue(bill);
-			node = node.getNext();
+			
 		}
 
 		input.close();
@@ -77,10 +77,10 @@ public class BillOrganizer implements Serializable {
 
 	public double totalBills() {
 		double total = 0;
-		Node<Bill> node = list.getHead();
-		while (node != null) {
-			total += node.getData().getAmountDue();
-			node = node.getNext();
+		LinkedListIterator<Bill> iter = list.iterator();
+		while (iter.hasNext()) {
+			Bill bill=iter.next();
+			total += bill.getAmountDue();
 		}
 		return total;
 	}
@@ -90,7 +90,7 @@ public class BillOrganizer implements Serializable {
 		if(dateQueue==null){
 			throw new NotFoundException();
 		}
-			iter=new LinkedListIterator<Bill>(dateQueue.peek());
+			iter=dateQueue.iterator();
 		return iter;
 		
 	}
@@ -99,16 +99,14 @@ public class BillOrganizer implements Serializable {
 		if(amountQueue==null){
 			throw new NotFoundException();
 		}
-		LinkedListIterator<Bill> iter = new LinkedListIterator<Bill>(
-				amountQueue.peek());
+		LinkedListIterator<Bill> iter =amountQueue.iterator();
 		return iter;
 	}
 	public LinkedListIterator<Bill> iteratorByType() throws NotFoundException {
 		if(billTypeQueue==null){
 			throw new NotFoundException();
 		}
-		LinkedListIterator<Bill> iter = new LinkedListIterator<Bill>(
-				billTypeQueue.peek());
+		LinkedListIterator<Bill> iter = billTypeQueue.iterator();
 		return iter;
 	}
 
@@ -126,25 +124,25 @@ public class BillOrganizer implements Serializable {
 	}
 	public void payNextBill( BillCriteria criteria)
 			throws NotFoundException {
-		Node<Bill> node = null;
+		Bill remove = null;
 		if (criteria == BillCriteria.BILLDUEDATE) {
-			node = dateQueue.peek();
+			remove = dateQueue.peek();
 			dateQueue.dequeue();
-			amountQueue.remove(node.getData());
-			billTypeQueue.remove(node.getData());
+			amountQueue.remove(remove);
+			billTypeQueue.remove(remove);
 		} else if (criteria == BillCriteria.BILLAMOUNT) {
-			node = amountQueue.peek();
+			remove = amountQueue.peek();
 			amountQueue.dequeue();
-			dateQueue.remove(node.getData());
-			billTypeQueue.remove(node.getData());
+			dateQueue.remove(remove);
+			billTypeQueue.remove(remove);
 		} else if (criteria == BillCriteria.BILLTYPE) {
-			node = billTypeQueue.peek();
+			remove = billTypeQueue.peek();
 			billTypeQueue.dequeue();
-			amountQueue.remove(node.getData());
-			dateQueue.remove(node.getData());
+			amountQueue.remove(remove);
+			dateQueue.remove(remove);
 		}
 
-		list.remove(node.getData());
+		list.remove(remove);
 	}
 	public PriorityQueue<Bill> viewByDate(){
 		return dateQueue;
@@ -207,7 +205,11 @@ public class BillOrganizer implements Serializable {
 			String filename = file.getSelectedFile().getPath();
 			BillOrganizer organ = new BillOrganizer(filename);
 			System.out.println(organ);
-
+			LinkedListIterator<Bill> iter=organ.iteratorByAmount();
+			System.out.println("print by amount");
+			while(iter.hasNext()){
+				System.out.println(iter.next().toString());
+			}
 		} catch (DuplicateDataException e) {
 		
 			e.printStackTrace();

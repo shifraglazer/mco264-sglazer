@@ -1,6 +1,9 @@
 package finalProject;
 
-public class CompletedCourse extends Course{
+import java.io.Serializable;
+
+public class CompletedCourse extends Course implements Serializable,Comparable<CompletedCourse> {
+	
 	
 	/**
 	 * 
@@ -33,10 +36,10 @@ public class CompletedCourse extends Course{
 		return studentID;
 	}
 	public int compareTo(CompletedCourse course){
-		return Integer.valueOf(yearCompleted).compareTo(course.yearCompleted);
+		return Integer.valueOf(yearCompleted).compareTo(Integer.valueOf(course.yearCompleted));
 	}
 	public String toString(){
-		String string="StudentID: "+studentID+super.toString()+ " Semester: "+ semesterCompleted+" Year: "+ yearCompleted+ " Grade: "+ grade;
+		String string="StudentID: "+studentID+" "+super.toString()+ " Semester: "+ semesterCompleted+" Year: "+ yearCompleted+ " Grade: "+ grade;
 				return string;
 	}
 

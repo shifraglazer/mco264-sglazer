@@ -1,12 +1,11 @@
 package finalProject;
 
 import java.io.Serializable;
-import java.util.Iterator;
-import java.util.PriorityQueue;
+import java.text.DecimalFormat;
 
 
 
-public class Student implements Serializable{
+public class Student implements Serializable, Comparable<Student>{
 
 	private static final long serialVersionUID = 1;
 	private final Integer STUDENTID;
@@ -23,7 +22,7 @@ public class Student implements Serializable{
 	private PriorityQueue<CompletedCourse> completedCourses;
 	public Student(Integer StudentID, String FirstName, String LastName,
 			String address, String city, String state, String zipcode,
-			Character gender, String major, Integer numberOfCredits, double gpa)
+			Character gender, String major)
 			throws MissingDataException, InvalidDataException {
 		if (StudentID == null) {
 			throw new MissingDataException();
@@ -37,23 +36,16 @@ public class Student implements Serializable{
 		this.zipcode = zipcode;
 		this.gender = gender;
 		this.major = major;
-		this.completedCourses=new PriorityQueue<CompletedCourse>();
-		if (numberOfCredits< 0) {
-			throw new InvalidDataException();
-		}
-
-		this.numberOfCredits = numberOfCredits;
-		if (gpa < 0.0 || gpa > 4.0) {
-			throw new InvalidDataException();
-		}
-		this.gpa = gpa;
+		this.completedCourses=new PriorityQueue<CompletedCourse>(new YearComparator());
+		this.numberOfCredits = 0;
+		this.gpa = 0;
 
 	}
 
 	public Student(Integer StudentID, String FirstName, String LastName,
 			Character gender, String major) throws MissingDataException, InvalidDataException {
 		this(StudentID, FirstName, LastName, null, null, null, null, gender,
-				major, 0, 0.0);
+				major);
 	}
 
 	public String getFirstName() {
@@ -89,7 +81,7 @@ public class Student implements Serializable{
 	}
 
 	public Integer getNumberOfCredits() {
-		Iterator<CompletedCourse> iter=completedCourses.iterator();
+		LinkedListIterator<CompletedCourse> iter=completedCourses.iterator();
 		int credits=0;
 		while(iter.hasNext()){
 			credits+=iter.next().getnumCredits();
@@ -99,7 +91,7 @@ public class Student implements Serializable{
 	}
 
 	public double getGpa() {
-		Iterator<CompletedCourse> iter=completedCourses.iterator();
+		LinkedListIterator<CompletedCourse> iter=completedCourses.iterator();
 		int grades=0;
 		int credits=0;
 		while(iter.hasNext()){
@@ -107,8 +99,9 @@ public class Student implements Serializable{
 			grades+=course.getGrade().getValue();
 			credits+=course.getnumCredits();
 					}
-		this.gpa=grades/Double.valueOf(credits);
-		return gpa;
+		this.gpa=(grades/Double.valueOf(credits))*4;
+		DecimalFormat formatter=new DecimalFormat("#.0");
+		return Double.valueOf(formatter.format(gpa));
 	}
 
 	public Integer getStudentID() {
@@ -212,16 +205,28 @@ public class Student implements Serializable{
 		}
 		if (gpa != 0.0) {
 			builder.append("GPA is: ");
-			builder.append(gpa);
+			DecimalFormat formatter=new DecimalFormat("#.0");
+			builder.append(formatter.format(gpa));
 		}
 		return builder.toString();
 	}
-
+	public String getCompletedCourses(){
+		if(completedCourses.isEmpty()){
+			return "No completed courses recorded";
+		}
+		StringBuilder builder=new StringBuilder();
+		LinkedListIterator<CompletedCourse> iter=completedCourses.iterator();
+		while(iter.hasNext()){
+			builder.append(iter.next().toString());
+			builder.append("\n");
+		}
+		return builder.toString();
+	}
 	public void addCompletedCourse(CompletedCourse course) throws DuplicateDataException {
 		if(completedCourses.contains(course)){
-			throw new DuplicateDataException();
+			throw new DuplicateDataException("Course can't be taken again");
 		}
-		completedCourses.add(course);
+		completedCourses.insert(course);
 		getGpa();
 		getNumberOfCredits();
 	}

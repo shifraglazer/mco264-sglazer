@@ -5,5 +5,7 @@ public class DuplicateDataException extends Exception{
 	public DuplicateDataException (){
 		super ("duplicate data");
 	}
-
+	public DuplicateDataException (String message){
+		super (message);
+	}
 }

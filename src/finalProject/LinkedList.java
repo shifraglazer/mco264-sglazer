@@ -1,4 +1,4 @@
-package billOrganizer;
+package finalProject;
 
 import java.io.Serializable;
 
@@ -99,6 +99,7 @@ public class LinkedList<T extends Serializable & Comparable<T> >implements Seria
 		}
 		return info;
 	}
+	
 	
 	//will return reference to external iterator, one instance can have many external iterators
 	public LinkedListIterator<T> iterator(){

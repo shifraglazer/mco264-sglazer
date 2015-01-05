@@ -17,19 +17,22 @@ public class PriorityQueue<T extends Serializable & Comparable<T>> {
 	public void enqueue(T data) throws DuplicateDataException {
 		list.insert(data, comparator);
 	}
-	public Node<T> dequeue() throws NotFoundException {
-		Node<T> head=list.getHead();
-		list.remove(head.getData());
+	public T dequeue() throws NotFoundException {
+		T head=list.getHead();
+		list.remove(head);
 		return head;
 	}
-	public Node<T> peek() throws NotFoundException {
+	public LinkedListIterator<T> iterator(){
+		return list.iterator();
+	}
+	public T peek() throws NotFoundException {
 		return list.getHead();
 		
 	}
-	public Node<T> remove(T data) throws NotFoundException{
+	public T remove(T data) throws NotFoundException{
 		Node<T> remove=list.find(data);
 		list.remove(data);
-		return remove;
+		return remove.getData();
 	}
 	public String toString(){
 		return list.toString();
@@ -49,10 +52,10 @@ public class PriorityQueue<T extends Serializable & Comparable<T>> {
 			System.out.println("add bills to queue based on bill amount");
 			System.out.println(queue.toString());
 			System.out.println("remove bill with id of 4");
-			System.out.println(queue.remove(bill).getData().toString());
+			System.out.println(queue.remove(bill).toString());
 			System.out.println("bills left on queue");
 			System.out.println(queue.toString());
-			System.out.println("Fist on queue is : "+ queue.peek().getData().toString());
+			System.out.println("Fist on queue is : "+ queue.peek().toString());
 			queue.dequeue();
 			System.out.println("Take first customer... dequeue.. now queue has \n"+ queue.toString());
 		
