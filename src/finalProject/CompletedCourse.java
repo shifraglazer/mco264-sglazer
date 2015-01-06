@@ -2,7 +2,7 @@ package finalProject;
 
 import java.io.Serializable;
 
-public class CompletedCourse extends Course implements Serializable,Comparable<CompletedCourse> {
+public class CompletedCourse extends Course implements Serializable{
 	
 	
 	/**
